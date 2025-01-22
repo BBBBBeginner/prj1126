@@ -122,7 +122,7 @@ public interface BoardMapper {
                     board_site AS site
                 FROM board
                 ORDER BY board_view_count DESC
-                LIMIT 3
+                LIMIT 5
             """)
     List<Board> findTopBoardsByViews();
 

@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Flex,
+  Heading,
   HStack,
   IconButton,
   Image,
@@ -83,7 +84,7 @@ export function BoardList() {
 
   const fetchTopBoards = async () => {
     try {
-      const response = await axios.get("/api/board/top-views"); // 상위 3개 조회수 API 호출
+      const response = await axios.get("/api/board/top-views"); // 상위 5개 조회수 API 호출
       setTopBoards(response.data); // 데이터 저장
     } catch (error) {
       console.error("인기 게시글 데이터를 가져오는 데 실패했습니다.");
@@ -147,17 +148,18 @@ export function BoardList() {
       <Center>
         <HStack
           mb={4}
-          w={"80%"}
+          w={{ base: "95%", md: "80%" }} // 모바일에서 95%, 데스크탑에서 80% 너비
           justifyContent="center"
-          style={{ gap: "20px" }}
+          style={{ gap: "10px" }} // 간격을 약간 좁힘
+          flexWrap="wrap" // 모바일에서 줄바꿈 허용
         >
           {/* 드롭다운 - 낚시 장소 */}
           <NativeSelectRoot
             style={{
-              width: "175px",
-              maxHeight: "50px",
-              fontSize: "14px",
-              padding: "5px",
+              width: "100%",
+              maxWidth: "120px", // 드롭다운 최대 너비를 200px로 설정
+              fontSize: "12px",
+              padding: "3px",
               border: "1px solid #0288d1",
               borderRadius: "4px",
             }}
@@ -175,10 +177,10 @@ export function BoardList() {
           {/* 드롭다운 - 검색 타입 */}
           <NativeSelectRoot
             style={{
-              width: "150px",
-              maxHeight: "50px",
-              fontSize: "14px",
-              padding: "5px",
+              width: "100%",
+              maxWidth: "120px", // 드롭다운 최대 너비를 동일하게 200px로 설정
+              fontSize: "12px",
+              padding: "3px",
               border: "1px solid #0288d1",
               borderRadius: "4px",
             }}
@@ -200,10 +202,9 @@ export function BoardList() {
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             style={{
-              maxWidth: "700px",
-              width: "100%",
-              maxHeight: "50px",
-              height: "50px",
+              width: "85%",
+              maxWidth: "700px", // 검색창 최대 너비를 400px로 설정
+              height: "45px",
               padding: "8px",
               fontSize: "14px",
               border: "1px solid #0288d1",
@@ -215,14 +216,14 @@ export function BoardList() {
           {/* 검색 버튼 */}
           <IconButton
             aria-label="Search database"
-            onClick={(e) => setSearchParams({ type, keyword, site })} // **
+            onClick={(e) => setSearchParams({ type, keyword, site })}
             style={{
-              maxHeight: "50px",
-              height: "30px",
-              padding: "5px",
+              maxWidth: "50px", // 버튼 크기 조정
+              height: "45px",
+              padding: "8px",
               color: "white",
-              border: "none",
-              borderRadius: "20px",
+              backgroundColor: "#0288d1",
+              borderRadius: "50%",
               cursor: "pointer",
             }}
           >
@@ -236,17 +237,15 @@ export function BoardList() {
         {" "}
         {/* 여백을 30px로 더 좁혔습니다 */}
         <Box w="60%" zIndex={1} p="2">
-          <h3
-            style={{
-              fontSize: "24px",
-              fontWeight: "bold",
-              color: "#0288d1",
-              marginBottom: "15px", // 제목과 슬라이더 사이 여백 축소
-              textAlign: "center",
-            }}
+          <Heading
+            fontSize={"20px"}
+            mb={1}
+            color={"blue.800"}
+            textAlign="center"
           >
             조회수 Top 5
-          </h3>
+          </Heading>
+
           {topBoards.length > 0 ? (
             <Slider
               {...{
@@ -255,7 +254,7 @@ export function BoardList() {
                 dots: false, // 점 표시 활성화
                 infinite: true, // 무한 반복
                 speed: 1500, // 애니메이션 속도
-                slidesToShow: 5, // 한 번에 5개의 슬라이드 표시
+                slidesToShow: 3, // 한 번에 3개의 슬라이드 표시
                 slidesToScroll: 1, // 한 번에 1개의 슬라이드 스크롤
                 responsive: [
                   {
@@ -553,20 +552,28 @@ export function BoardList() {
       </Table.Root>
 
       {/* 페이지네이션 */}
+
+      {/* 게시글 작성 버튼 */}
+      <Box ml="auto" w={{ base: "100%", md: "auto" }} textAlign="center">
+        <Button
+          variant="solid"
+          onClick={handleWriteClick}
+          w={{ base: "100%", md: "auto" }} // 버튼 크기 반응형 조정
+          mt={{ base: 4, md: 0 }}
+        >
+          게시글 작성
+        </Button>
+      </Box>
       <Box mt={5} mb={5}>
         <Flex
-          direction={{ base: "column", md: "row" }} // 반응형: 작은 화면에서 세로 정렬
-          align={{ base: "center", md: "center" }} // 중앙 정렬
-          justify={{ base: "center", md: "space-between" }} // 양쪽 정렬 (큰 화면에서)
+          direction="column" // 항상 세로 정렬
+          align="center" // 모든 요소 중앙 정렬
+          justify="center" // 중앙 배치
           gap={4}
           wrap="wrap" // 작은 화면에서 줄바꿈 허용
         >
           {/* 페이지네이션 중앙 */}
-          <HStack
-            gap={2}
-            justify="center"
-            wrap="wrap" // 작은 화면에서 줄바꿈
-          >
+          <HStack gap={2} justify="center" wrap="wrap">
             <PaginationRoot
               onPageChange={handlePageChange}
               count={count}
@@ -578,23 +585,6 @@ export function BoardList() {
               <PaginationNextTrigger />
             </PaginationRoot>
           </HStack>
-
-          {/* 게시글 작성 버튼 */}
-          <Button
-            variant="solid"
-            onClick={handleWriteClick}
-            style={{
-              backgroundColor: "#0288d1",
-              color: "white",
-              padding: "8px 12px",
-              borderRadius: "20px",
-              cursor: "pointer",
-            }}
-            size="sm"
-            minW="120px" // 최소 너비 설정
-          >
-            게시글 작성
-          </Button>
         </Flex>
       </Box>
     </Box>
