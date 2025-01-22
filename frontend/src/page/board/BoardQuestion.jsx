@@ -45,7 +45,6 @@ export function BoardQuestion() {
   };
 
   function handlePageChange(e) {
-    console.log(e.page);
     const nextSearchParam = new URLSearchParams(searchParams);
     nextSearchParam.set("page", e.page);
     setSearchParams(nextSearchParam);
@@ -56,39 +55,69 @@ export function BoardQuestion() {
   }
 
   return (
-    <Stack w="70%" mx={"auto"}>
-      <Heading fontSize={"30px"} pb={5} color={"blue.800"}>
+    <Stack
+      w={{ base: "95%", md: "80%", lg: "70%" }} // 반응형 너비 설정
+      mx="auto"
+      spacing={5} // 섹션 간 간격
+      p={{ base: 3, md: 5 }} // 반응형 여백
+    >
+      <Heading
+        fontSize={{ base: "24px", md: "28px", lg: "30px" }} // 반응형 폰트 크기
+        pb={3}
+        color={"blue.800"}
+        textAlign="center" // 제목 중앙 정렬
+      >
         질문게시판
       </Heading>
-      <hr />
-      <Table.Root size="sm" interactive>
+      <Box as="hr" />
+
+      <Table.Root
+        size="sm"
+        interactive
+        style={{
+          width: "100%",
+          borderCollapse: "collapse",
+          margin: "0 auto",
+        }}
+      >
         <Table.Header>
           <Table.Row bg="blue.100">
             <Table.ColumnHeader
-              w="10%"
+              w={{ base: "20%", md: "10%" }} // 반응형 열 너비
               whiteSpace={"nowrap"}
               textAlign={"center"}
             >
               번호
             </Table.ColumnHeader>
-            <Table.ColumnHeader w="30%" whiteSpace={"nowrap"}>
+            <Table.ColumnHeader
+              w={{ base: "50%", md: "30%" }}
+              whiteSpace={"nowrap"}
+            >
               제목
             </Table.ColumnHeader>
             <Table.ColumnHeader
-              w="15%"
+              w={{ base: "30%", md: "15%" }}
               whiteSpace={"nowrap"}
               textAlign={"center"}
             >
               작성자
             </Table.ColumnHeader>
-            <Table.ColumnHeader w="10%" whiteSpace={"nowrap"}>
+            <Table.ColumnHeader
+              w={{ base: "40%", md: "10%" }}
+              whiteSpace={"nowrap"}
+            >
               작성일
             </Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {queList.map((board) => (
-            <Table.Row key={board.id} onClick={() => handleRowClick(board.id)}>
+            <Table.Row
+              key={board.id}
+              onClick={() => handleRowClick(board.id)}
+              _hover={{ bg: "gray.100" }} // 행 호버 효과
+              cursor="pointer"
+            >
               <Table.Cell whiteSpace={"nowrap"} textAlign={"center"}>
                 {board.id}
               </Table.Cell>
@@ -101,11 +130,19 @@ export function BoardQuestion() {
           ))}
         </Table.Body>
       </Table.Root>
-      <Box ml={"auto"}>
+
+      <Box ml="auto" w="100%" textAlign={{ base: "center", md: "right" }}>
         {isAuthenticated && (
-          <Button onClick={handleWriteContent}>잘문하기</Button>
+          <Button
+            onClick={handleWriteContent}
+            w={{ base: "100%", md: "auto" }} // 반응형 버튼 너비
+            mt={{ base: 4, md: 0 }} // 모바일에서 위 간격 추가
+          >
+            질문하기
+          </Button>
         )}
       </Box>
+
       <Center>
         <PaginationRoot
           onPageChange={handlePageChange}
@@ -114,7 +151,7 @@ export function BoardQuestion() {
           page={page}
           variant="solid"
         >
-          <HStack>
+          <HStack spacing={3}>
             <PaginationPrevTrigger />
             <PaginationItems />
             <PaginationNextTrigger />

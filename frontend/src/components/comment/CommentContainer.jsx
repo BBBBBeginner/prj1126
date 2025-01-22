@@ -1,4 +1,10 @@
-import { Box, Heading, Spinner, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Heading,
+  Spinner,
+  Stack,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { CommentInput } from "./CommentInput.jsx";
 import { CommentList } from "./CommentList.jsx";
 import { useEffect, useState } from "react";
@@ -8,6 +14,9 @@ export function CommentContainer({ boardId }) {
   const [commentList, setCommentList] = useState([]);
   const [processing, setProcessing] = useState(false);
   const [loading, setLoading] = useState(true); // 로딩 상태 추가
+
+  // 반응형 스타일 조정: 댓글 제목의 크기를 뷰포트 크기에 따라 변경
+  const headingSize = useBreakpointValue({ base: "md", md: "lg", lg: "xl" });
 
   useEffect(() => {
     if (!boardId) {
@@ -67,13 +76,29 @@ export function CommentContainer({ boardId }) {
   }
 
   if (loading) {
-    return <Spinner />;
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="50vh"
+      >
+        <Spinner size="xl" />
+      </Box>
+    );
   }
 
   return (
-    <Box pt={5}>
-      <Heading>댓글</Heading>
-      <Stack>
+    <Box
+      pt={5}
+      px={{ base: 4, md: 8, lg: 12 }} // 화면 크기에 따라 패딩 조정
+      maxWidth={{ base: "100%", md: "800px", lg: "1200px" }} // 최대 폭 조정
+      mx="auto" // 중앙 정렬
+    >
+      <Heading size={headingSize} textAlign="center" mb={4}>
+        댓글
+      </Heading>
+      <Stack spacing={6}>
         <CommentInput boardId={boardId} onSaveClick={handleSaveClick} />
         <CommentList
           boardId={boardId}

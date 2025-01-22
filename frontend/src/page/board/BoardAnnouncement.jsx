@@ -18,7 +18,7 @@ export function BoardAnnouncement() {
   const navigate = useNavigate();
   const { isAdmin } = useContext(AuthenticationContext);
 
-  //페이지 번호얻기
+  // 페이지 번호 얻기
   const pageParam = searchParams.get("page") ? searchParams.get("page") : "1";
   const page = Number(pageParam);
 
@@ -42,7 +42,6 @@ export function BoardAnnouncement() {
   }, [searchParams]);
 
   function handlePageChange(e) {
-    console.log(e.page);
     const nextSearchParam = new URLSearchParams(searchParams);
     nextSearchParam.set("page", e.page);
     setSearchParams(nextSearchParam);
@@ -57,32 +56,50 @@ export function BoardAnnouncement() {
   }
 
   return (
-    <Stack w="70%" mx={"auto"}>
-      <Heading fontSize={"30px"} pb={5} color={"blue.800"}>
+    <Stack
+      w={{ base: "100%", md: "80%", lg: "70%" }} // 반응형 너비 조정
+      mx="auto"
+      p={{ base: 3, md: 5 }} // 여백 조정
+      spacing={5}
+    >
+      <Heading
+        fontSize={{ base: "20px", md: "25px", lg: "30px" }} // 제목 크기 조정
+        pb={3}
+        color="blue.800"
+        textAlign="center" // 중앙 정렬
+      >
         공지사항
       </Heading>
-      <hr />
+      <Box as="hr" />
+
+      {/* 반응형 테이블 */}
       <Table.Root size="sm" interactive>
         <Table.Header>
           <Table.Row bg="blue.100">
             <Table.ColumnHeader
-              w="10%"
-              whiteSpace={"nowrap"}
-              textAlign={"center"}
+              w={{ base: "20%", md: "10%" }} // 반응형 폭 조정
+              whiteSpace="nowrap"
+              textAlign="center"
             >
               번호
             </Table.ColumnHeader>
-            <Table.ColumnHeader w="30%" whiteSpace={"nowrap"}>
+            <Table.ColumnHeader
+              w={{ base: "50%", md: "30%" }} // 제목 열 크기 조정
+              whiteSpace="nowrap"
+            >
               제목
             </Table.ColumnHeader>
             <Table.ColumnHeader
-              w="15%"
-              whiteSpace={"nowrap"}
-              textAlign={"center"}
+              w={{ base: "30%", md: "15%" }}
+              whiteSpace="nowrap"
+              textAlign="center"
             >
               작성자
             </Table.ColumnHeader>
-            <Table.ColumnHeader w="10%" whiteSpace={"nowrap"}>
+            <Table.ColumnHeader
+              w={{ base: "30%", md: "10%" }}
+              whiteSpace="nowrap"
+            >
               작성일
             </Table.ColumnHeader>
           </Table.Row>
@@ -90,21 +107,33 @@ export function BoardAnnouncement() {
         <Table.Body>
           {anList.map((board) => (
             <Table.Row key={board.id} onClick={() => handleRowClick(board.id)}>
-              <Table.Cell whiteSpace={"nowrap"} textAlign={"center"}>
+              <Table.Cell whiteSpace="nowrap" textAlign="center">
                 {board.id}
               </Table.Cell>
-              <Table.Cell whiteSpace={"nowrap"}>{board.title}</Table.Cell>
-              <Table.Cell whiteSpace={"nowrap"} textAlign={"center"}>
+              <Table.Cell whiteSpace="nowrap">{board.title}</Table.Cell>
+              <Table.Cell whiteSpace="nowrap" textAlign="center">
                 {board.writer}
               </Table.Cell>
-              <Table.Cell whiteSpace={"nowrap"}>{board.inserted}</Table.Cell>
+              <Table.Cell whiteSpace="nowrap">{board.inserted}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table.Root>
-      <Box ml={"auto"}>
-        {isAdmin && <Button onClick={handleWriteContent}>글쓰기</Button>}
+
+      {/* 글쓰기 버튼 (관리자만 표시) */}
+      <Box ml="auto" w={{ base: "100%", md: "auto" }} textAlign="center">
+        {isAdmin && (
+          <Button
+            onClick={handleWriteContent}
+            w={{ base: "100%", md: "auto" }} // 버튼 크기 반응형 조정
+            mt={{ base: 4, md: 0 }}
+          >
+            글쓰기
+          </Button>
+        )}
       </Box>
+
+      {/* 페이지네이션 */}
       <Center>
         <PaginationRoot
           onPageChange={handlePageChange}
@@ -113,7 +142,7 @@ export function BoardAnnouncement() {
           page={page}
           variant="solid"
         >
-          <HStack>
+          <HStack spacing={2}>
             <PaginationPrevTrigger />
             <PaginationItems />
             <PaginationNextTrigger />

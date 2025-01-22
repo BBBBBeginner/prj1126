@@ -11,6 +11,12 @@ function AuthenticationProvider({ children }) {
     const token = localStorage.getItem("token");
     if (token) {
       const decoded = jwtDecode(token);
+
+      const isAuthenticated = Date.now() < decoded.exp * 1000;
+      if (!isAuthenticated) {
+        localStorage.removeItem("token");
+        return;
+      }
       setUserToken(decoded);
     }
   }, []);

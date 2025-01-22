@@ -28,27 +28,18 @@ import { AuthenticationContext } from "../../context/AuthenticationProvider.jsx"
 
 export function MemberEdit() {
   const { id } = useParams();
-  // 데이터 받기
   const [member, setMember] = useState(null);
-  // 수정 대상 데이터
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [post, setPost] = useState("");
   const [address, setAddress] = useState("");
   const [email, setEmail] = useState("");
-  // 수정시 비밀번호 수정
   const [oldPassword, setOldPassword] = useState("");
-  // 유효성 만족시 open
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
-  // 이메일 오류 상태
   const [emailError, setEmailError] = useState(false);
-  // 이메일 메시지 상태
   const [emailMessage, setEmailMessage] = useState("");
-
-  //우편번호 api
   const [isOpen, setIsOpen] = useState(false);
-  // 보안
   const { hasAccess } = useContext(AuthenticationContext);
 
   useEffect(() => {
@@ -62,7 +53,6 @@ export function MemberEdit() {
     });
   }, []);
 
-  // 수정 버튼 클릭시 업데이트 + 토스터
   function handleSaveClick() {
     axios
       .put("/api/member/update", {
@@ -97,12 +87,10 @@ export function MemberEdit() {
       });
   }
 
-  //로딩
   if (member === null) {
     return <Spinner />;
   }
 
-  //이메일 정규식
   const handleEmailChange = (e) => {
     const value = e.target.value;
     setEmail(value);
@@ -119,7 +107,6 @@ export function MemberEdit() {
     }
   };
 
-  //전화번호 정규식
   function regPhoneNumber(e) {
     const result = e.target.value
       .replace(/[^0-9.]/g, "")
@@ -128,160 +115,92 @@ export function MemberEdit() {
     setPhone(result);
   }
 
-  // 우편 api
   const handleApi = () => {
     setIsOpen(true);
   };
   const handleComplete = (e) => {
     const { address, zonecode } = e;
-    setPost(zonecode); // 선택된 우편번호 저장
-    setAddress(address); // 선택된 상세주소 저장
+    setPost(zonecode);
+    setAddress(address);
   };
-  const handleClose = (e) => {
-    if (e === "FORCE_CLOSE") {
-      setIsOpen(false);
-    } else if (e === "COMPLETE_CLOSE") {
-      setIsOpen(false);
-    }
-  };
-  const handleButtonClose = () => {
+  const handleClose = () => {
     setIsOpen(false);
   };
 
   return (
-    <Box px="20px" mx={"auto"} w={{ md: "500px" }}>
-      <Heading>내 정보 수정</Heading>
+    <Box
+      px={{ base: "10px", md: "20px" }}
+      mx="auto"
+      w={{ base: "95%", md: "70%", lg: "50%" }}
+    >
+      <Heading
+        textAlign="center"
+        fontSize={{ base: "20px", md: "24px", lg: "28px" }}
+        mb={5}
+      >
+        내 정보 수정
+      </Heading>
       {hasAccess(member.id) && (
-        <Stack gap={5} p="5" bg="blue.200">
-          <Field readOnly label={"아이디"}>
-            <Input
-              readOnly
-              defaultValue={member.id}
-              style={{ color: "gray" }}
-            />
+        <Stack gap={5} p={5} bg="blue.200" borderRadius="md">
+          <Field label={"아이디"}>
+            <Input readOnly value={member.id} style={{ color: "gray" }} />
           </Field>
           <Field label={"암호"}>
             <Input
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              variant="subtle"
             />
           </Field>
-          <Field readOnly label={"이름"}>
-            <Input
-              readOnly
-              style={{ color: "gray" }}
-              value={member.name}
-              maxW="550px"
-            />
+          <Field label={"이름"}>
+            <Input readOnly value={member.name} style={{ color: "gray" }} />
           </Field>
           <Field label={"이메일"}>
-            <Input
-              value={email}
-              onChange={handleEmailChange}
-              maxW="550px"
-              variant="subtle"
-            />
+            <Input value={email} onChange={handleEmailChange} />
             <Span style={{ color: emailError ? "green" : "red" }}>
               {emailMessage}
             </Span>
           </Field>
           <Field label={"전화번호"}>
-            <Input
-              value={phone}
-              onChange={regPhoneNumber}
-              variant="subtle"
-              maxW="550px"
-            />
+            <Input value={phone} onChange={regPhoneNumber} />
           </Field>
-          <Field readOnly label={"생일"}>
-            <Input
-              readOnly
-              value={member.birth}
-              style={{ color: "gray" }}
-              maxW="550px"
-            />
+          <Field label={"생일"}>
+            <Input readOnly value={member.birth} style={{ color: "gray" }} />
           </Field>
           <Box>
             <Field label={"우편번호"}>
               <Group>
-                <Input
-                  value={post}
-                  readOnly
-                  onChange={(e) => setPost(e.target.value)}
-                  variant="subtle"
-                />
-                <DialogRoot>
-                  <DialogTrigger asChild>
-                    <Button onClick={() => setIsOpen(true)}>
-                      우편번호 찾기
-                    </Button>
-                  </DialogTrigger>
-                  {isOpen && (
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>우편번호 검색</DialogTitle>
-                      </DialogHeader>
-                      <DialogBody pb="4">
-                        <Field mt="5">
-                          <DaumPostcodeEmbed
-                            onComplete={handleComplete}
-                            onClose={handleClose}
-                          />
-                        </Field>
-                      </DialogBody>
-                      <DialogFooter>
-                        <DialogActionTrigger asChild>
-                          <Button
-                            variant="outline"
-                            onClick={() => setIsOpen(false)}
-                          >
-                            닫기
-                          </Button>
-                        </DialogActionTrigger>
-                      </DialogFooter>
-                    </DialogContent>
-                  )}
-                </DialogRoot>
+                <Input value={post} readOnly />
+                <Button onClick={handleApi}>우편번호 찾기</Button>
               </Group>
             </Field>
-
+            {isOpen && (
+              <Box mt={3}>
+                <DaumPostcodeEmbed
+                  onComplete={handleComplete}
+                  onClose={handleClose}
+                />
+                <Button mt={2} onClick={handleClose}>
+                  닫기
+                </Button>
+              </Box>
+            )}
             <Field label={"상세주소"}>
-              <Input
-                value={address}
-                readOnly
-                onChange={(e) => setAddress(e.target.value)}
-                variant="subtle"
-                maxW="550px"
-              />
+              <Input value={address} readOnly />
             </Field>
           </Box>
-          <Field readOnly label={"가입일시"}>
-            <Input
-              defaultValue={member.id}
-              style={{ color: "gray" }}
-              value={member.inserted}
-              maxW="550px"
-            />
+          <Field label={"가입일시"}>
+            <Input readOnly value={member.inserted} style={{ color: "gray" }} />
           </Field>
-          <Box>
+          <Box textAlign="center">
             <DialogRoot open={open} onOpenChange={(e) => setOpen(e.open)}>
               <DialogTrigger asChild>
-                <button
-                  style={{
-                    backgroundColor: "#6276c6",
-                    color: "#fff",
-                    padding: "10px 20px",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    width: "385px", // 폭 고정
-                    display: "block", // 블록 요소 설정
-                    margin: "0 auto", // 가운데 정렬
-                  }}
+                <Button
+                  w={{ base: "100%", md: "auto" }}
+                  colorScheme="blue"
+                  mt={4}
                 >
                   저장
-                </button>
+                </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
@@ -302,24 +221,9 @@ export function MemberEdit() {
                   <DialogActionTrigger>
                     <Button variant={"outline"}>취소</Button>
                   </DialogActionTrigger>
-                  <Box>
-                    <button
-                      style={{
-                        backgroundColor: "#6276c6",
-                        color: "#fff",
-                        padding: "10px 20px",
-                        border: "none",
-                        borderRadius: "5px",
-                        cursor: "pointer",
-                        width: "385px", // 폭 고정
-                        display: "block", // 블록 요소 설정
-                        margin: "0 auto", // 가운데 정렬
-                      }}
-                      onClick={handleSaveClick}
-                    >
-                      저장
-                    </button>
-                  </Box>
+                  <Button colorScheme="blue" onClick={handleSaveClick}>
+                    저장
+                  </Button>
                 </DialogFooter>
               </DialogContent>
             </DialogRoot>

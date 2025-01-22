@@ -26,7 +26,7 @@ export function MemberInfo() {
   const { hasAccess } = useContext(AuthenticationContext);
 
   useEffect(() => {
-    //회원정보 얻기
+    // 회원정보 얻기
     axios.get(`/api/member/${id}`).then((res) => setMember(res.data));
   }, []);
 
@@ -63,99 +63,47 @@ export function MemberInfo() {
   }
 
   return (
-    <Box px="20px" mx={"auto"} w={{ md: "500px" }}>
-      <h3>회원 정보</h3>
+    <Box
+      px={{ base: "10px", md: "20px" }}
+      mx="auto"
+      w={{ base: "95%", md: "500px" }}
+    >
+      <h3
+        style={{ fontSize: "1.5em", textAlign: "center", marginBottom: "1em" }}
+      >
+        회원 정보
+      </h3>
 
-      <Stack gap={5} p="5" bg="blue.200" borderRadius="md">
-        <Field label={"아이디"}>
-          <Input
-            readOnly
-            value={member.id}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"암호"}>
-          <Input
-            readOnly
-            value={member.password}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"이름"}>
-          <Input
-            readOnly
-            value={member.name}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"이메일"}>
-          <Input
-            readOnly
-            value={member.email}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"번호"}>
-          <Input
-            readOnly
-            value={member.phone}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"생일"}>
-          <Input
-            readOnly
-            value={member.birth}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"우편번호"}>
-          <Input
-            readOnly
-            value={member.post}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"주소"}>
-          <Input
-            readOnly
-            value={member.address}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
-        <Field label={"가입일시"}>
-          <Input
-            readOnly
-            value={member.inserted}
-            mx={"auto"}
-            w={{ md: "100%" }}
-            style={{ color: "gray" }}
-          />
-        </Field>
+      <Stack gap={5} p={5} bg="blue.200" borderRadius="md">
+        {/** 각 Field는 반응형으로 너비 설정 */}
+        {[
+          { label: "아이디", value: member.id },
+          { label: "암호", value: member.password },
+          { label: "이름", value: member.name },
+          { label: "이메일", value: member.email },
+          { label: "번호", value: member.phone },
+          { label: "생일", value: member.birth },
+          { label: "우편번호", value: member.post },
+          { label: "주소", value: member.address },
+          { label: "가입일시", value: member.inserted },
+        ].map((field, idx) => (
+          <Field label={field.label} key={idx}>
+            <Input
+              readOnly
+              value={field.value}
+              mx="auto"
+              w="100%"
+              style={{ color: "gray" }}
+            />
+          </Field>
+        ))}
+
         <Box textAlign="center">
           <DialogRoot open={open} onOpenChange={(e) => setOpen(e.open)}>
             <DialogTrigger asChild>
               <div>
                 {hasAccess(member.id) && (
-                  <Box mb={2}>
-                    {" "}
-                    {/* 간격을 2로 줄임 */}
+                  <Box mb={4}>
                     <button
                       style={{
                         backgroundColor: "#6276c6",
@@ -164,9 +112,9 @@ export function MemberInfo() {
                         border: "none",
                         borderRadius: "5px",
                         cursor: "pointer",
-                        width: "385px", // 폭 고정
-                        display: "block", // 블록 요소 설정
-                        margin: "0 auto", // 가운데 정렬
+                        width: "100%",
+                        maxWidth: "385px", // 최대 너비 설정
+                        margin: "0 auto",
                       }}
                       onClick={() => navigate(`/member/edit/${id}`)}
                     >
@@ -174,9 +122,7 @@ export function MemberInfo() {
                     </button>
                   </Box>
                 )}
-                <Box mb={2}>
-                  {" "}
-                  {/* 간격을 2로 줄임 */}
+                <Box mb={4}>
                   <button
                     style={{
                       backgroundColor: "#5ed0da",
@@ -185,9 +131,9 @@ export function MemberInfo() {
                       border: "none",
                       borderRadius: "5px",
                       cursor: "pointer",
-                      width: "385px", // 폭 고정
-                      display: "block", // 블록 요소 설정
-                      margin: "0 auto", // 가운데 정렬
+                      width: "100%",
+                      maxWidth: "385px", // 최대 너비 설정
+                      margin: "0 auto",
                     }}
                     onClick={() => navigate(`/board/written/${id}`)}
                   >
@@ -203,9 +149,9 @@ export function MemberInfo() {
                       border: "none",
                       borderRadius: "5px",
                       cursor: "pointer",
-                      width: "385px", // 폭 고정
-                      display: "block", // 블록 요소 설정
-                      margin: "0 auto", // 가운데 정렬
+                      width: "100%",
+                      maxWidth: "385px", // 최대 너비 설정
+                      margin: "0 auto",
                     }}
                   >
                     탈퇴
@@ -215,7 +161,7 @@ export function MemberInfo() {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>탈퇴확인</DialogTitle>
+                <DialogTitle>탈퇴 확인</DialogTitle>
               </DialogHeader>
               <DialogBody>
                 <p>탈퇴 하시겠습니까?</p>
@@ -250,9 +196,9 @@ export function MemberInfo() {
                     border: "none",
                     borderRadius: "5px",
                     cursor: "pointer",
-                    width: "385px", // 폭 고정
-                    display: "block", // 블록 요소 설정
-                    margin: "0 auto", // 가운데 정렬
+                    width: "100%",
+                    maxWidth: "385px", // 최대 너비 설정
+                    margin: "0 auto",
                   }}
                   onClick={handleDeleteClick}
                 >
