@@ -155,7 +155,7 @@ export function BoardMain() {
       position="relative"
     >
       <Box
-        w={"500px"}
+        w={"300px"}
         boxShadow="lg"
         bg="blue.200"
         borderRadius="lg"
