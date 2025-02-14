@@ -399,6 +399,7 @@ public class BoardService {
 
 
     public List<FishingAddress> selectFishingAddress() {
+        System.out.println("잘됨");
         return mapper.selectFishAddress();
     }
 

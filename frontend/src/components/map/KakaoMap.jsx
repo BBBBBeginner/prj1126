@@ -229,6 +229,8 @@ export function KakaoMap() {
       setSearchOpen(true);
     }
   };
+  console.log("Kakao API Key:", import.meta.env.VITE_KAKAOMAP_API_KEY);
+  console.log("Weather API Key:", import.meta.env.VITE_WEATHER_API_KEY);
 
   return (
     <HStack

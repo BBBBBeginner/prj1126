@@ -27,6 +27,7 @@ public class BoardController {
 
     @GetMapping("fishingAddress")
     public List<FishingAddress> fishingAddress() {
+        System.out.println("들어옴");
         return service.selectFishingAddress();
     }
 

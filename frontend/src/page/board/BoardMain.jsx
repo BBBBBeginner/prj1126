@@ -188,7 +188,7 @@ export function BoardMain() {
       </Box>
 
       {/* 공지사항 슬라이더 */}
-      <Box w="60%" mt="150px" zIndex={1} p="2">
+      <Box w="100%" mt="150px" zIndex={1} p="2">
         {annList.length > 0 ? (
           <Slider {...sliderSettings}>
             {annList.map((ann) => (
